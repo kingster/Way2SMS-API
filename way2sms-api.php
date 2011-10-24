@@ -5,7 +5,7 @@
  * Function to send to sms to multiple people via way2sms
  * @author Kingster
  * @category SMS
- * @example sendsmsToMany ( '9000012345' , 'password' , '987654321' , 'Hello World')
+ * @example sendsmsToMany ( '9000012345' , 'password' , '987654321,9876501234' , 'Hello World')
  * @url https://github.com/kingster/Way2SMS-API/
  * Please use this code on your own risk. The author is no way responsible for the outcome arising out of this
  * Good Luck!
