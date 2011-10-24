@@ -7,6 +7,7 @@
  * @category SMS
  * @example sendsmsToMany ( '9000012345' , 'password' , '987654321,9876501234' , 'Hello World')
  * @url https://github.com/kingster/Way2SMS-API/
+ * @return String/Array
  * Please use this code on your own risk. The author is no way responsible for the outcome arising out of this
  * Good Luck!
  **/
@@ -25,7 +26,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/Login1.action");
   curl_setopt($curl, CURLOPT_POST, 1);
   curl_setopt($curl, CURLOPT_POSTFIELDS, "username=".$uid."&password=".$pwd."&button=Login");
-  //curl_setopt($curl , CURLOPT_PROXY , '10.3.100.211:8080' );
+  //curl_setopt($curl , CURLOPT_PROXY , '144.16.192.218:8080' );
   curl_setopt($curl, CURLOPT_COOKIESESSION, 1);
   curl_setopt($curl, CURLOPT_COOKIEFILE, "cookie_way2sms");
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -53,11 +54,12 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   preg_match_all('/<input[\s]*type="hidden"[\s]*name="Action"[\s]*id="Action"[\s]*value="?([^>]*)?"/si', $text, $match);
   $action = $match[1][0]; // get custid from the form fro the Action field in the post form
 
+  $result = array ();
   foreach ($pharr as $p)
   {
     if (strlen($p) != 10 || !is_numeric($p) || strpos($p, ".") != false)
     {
-      $ret .= "invalid number;".$p."\n";
+      $result[] = array ( 'phone' => $p , 'msg' => $msg , 'result' => "invalid number" );
       continue;
     }
 
@@ -71,23 +73,25 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
       "HiddenAction=instantsms&bulidgpwd=*******&bulidguid=username&catnamedis=Birthday&chkall=on&gpwd1=*******&guid1=username&ypwd1=*******&yuid1=username&Action=".
       $action."&MobNo=".$p."&textArea=".$msg);
     $contents = curl_exec($curl);
-
+    
+    //Check Message Status  
+    $pos = strpos($contents, 'Message has been submitted successfully');
+    $res = ( $pos == false) ? false : true;
+    $result[] = array ( 'phone' => $p , 'msg' => $msg , 'result' => $res );
+     
   }
   //echo $text;
   
   // Logout :P
   curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/LogOut");
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
-  curl_exec($curl);
+  $text = curl_exec($curl);
 
   curl_close($curl);
 
   //preg_match_all('/<span class="style1">?([^>]*)?<\/span>/si', $contents, $match);
   //$out=str_replace("&nbsp;","",$match[1][0]);
-  if ($text == 'ok')
-    return true;
-  else
-    return false;
+  return $result;
 
 }
 
