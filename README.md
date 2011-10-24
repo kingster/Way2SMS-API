@@ -6,10 +6,12 @@ Send SMS Via Way2SMS from PHP.
 
 How to
 -------
-```<?php 
+```php
+<?php
     include('way2sms-api.php');
     sendsmsToMany ( '9000012345' , 'password' , '987654321' , 'Hello World');   
-?>```
+?>
+```
 
 
 Note
