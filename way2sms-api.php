@@ -41,7 +41,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
 
   if (trim($msg) == "" || strlen($msg) == 0)
     return "invalid message";
-  $msg = urlencode($msg);
+  $msg = urlencode(substr($msg,0,160));
   $pharr = explode(";", $phone);
   $refurl = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
