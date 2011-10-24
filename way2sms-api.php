@@ -24,7 +24,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/Login1.action");
   curl_setopt($curl, CURLOPT_POST, 1);
   curl_setopt($curl, CURLOPT_POSTFIELDS, "username=".$uid."&password=".$pwd."&button=Login");
-  curl_setopt($curl , CURLOPT_PROXY , '10.3.100.211:8080' );
+  //curl_setopt($curl , CURLOPT_PROXY , '10.3.100.211:8080' );
   curl_setopt($curl, CURLOPT_COOKIESESSION, 1);
   curl_setopt($curl, CURLOPT_COOKIEFILE, "cookie_way2sms");
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
