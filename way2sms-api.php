@@ -76,7 +76,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
     
     //Check Message Status  
     $pos = strpos($contents, 'Message has been submitted successfully');
-    $res = ( $pos == false) ? false : true;
+    $res = ( $pos !== false) ? true : false;
     $result[] = array ( 'phone' => $p , 'msg' => $msg , 'result' => $res );
      
   }
