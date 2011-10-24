@@ -18,11 +18,13 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
 
   $uid = urlencode($uid);
   $pwd = urlencode($pwd);
+  
+  $autobalancer = rand (1,8) ;
 
-  curl_setopt($curl, CURLOPT_URL, "http://site6.way2sms.com/Login1.action");
+  curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/Login1.action");
   curl_setopt($curl, CURLOPT_POST, 1);
   curl_setopt($curl, CURLOPT_POSTFIELDS, "username=".$uid."&password=".$pwd."&button=Login");
-  //curl_setopt($curl , CURLOPT_PROXY , '10.3.100.211:8080' );
+  curl_setopt($curl , CURLOPT_PROXY , '10.3.100.211:8080' );
   curl_setopt($curl, CURLOPT_COOKIESESSION, 1);
   curl_setopt($curl, CURLOPT_COOKIEFILE, "cookie_way2sms");
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -30,9 +32,8 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
   curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
-  curl_setopt($curl, CURLOPT_REFERER, "http://site6.way2sms.com/");
+  curl_setopt($curl, CURLOPT_REFERER, "http://site".$autobalancer.".way2sms.com/");
   $text = curl_exec($curl);
-
 
   // Check for proper login
   $pos = stripos(curl_getinfo($curl, CURLINFO_EFFECTIVE_URL), "Main.action");
@@ -45,13 +46,11 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   $pharr = explode(";", $phone);
   $refurl = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
-  curl_setopt($curl, CURLOPT_URL, "http://site6.way2sms.com/jsp/InstantSMS.jsp");
+  curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/jsp/InstantSMS.jsp");
   $text = curl_exec($curl);
-
 
   preg_match_all('/<input[\s]*type="hidden"[\s]*name="Action"[\s]*id="Action"[\s]*value="?([^>]*)?"/si', $text, $match);
   $action = $match[1][0]; // get custid from the form fro the Action field in the post form
-
 
   foreach ($pharr as $p)
   {
@@ -64,7 +63,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
     $p = urlencode($p);
 
     // Send SMS
-    curl_setopt($curl, CURLOPT_URL, 'http://site6.way2sms.com/quicksms.action');
+    curl_setopt($curl, CURLOPT_URL, 'http://site'.$autobalancer.'.way2sms.com/quicksms.action');
     curl_setopt($curl, CURLOPT_REFERER, curl_getinfo($curl, CURLINFO_EFFECTIVE_URL));
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS,
@@ -76,12 +75,11 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   //echo $text;
   
   // Logout :P
-  curl_setopt($curl, CURLOPT_URL, "http://site6.way2sms.com/LogOut");
+  curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/LogOut");
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
   curl_exec($curl);
 
   curl_close($curl);
-  
 
   //preg_match_all('/<span class="style1">?([^>]*)?<\/span>/si', $contents, $match);
   //$out=str_replace("&nbsp;","",$match[1][0]);
@@ -91,5 +89,5 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
     return false;
 
 }
+
 ?>
- 
