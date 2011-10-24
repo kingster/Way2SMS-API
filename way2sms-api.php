@@ -28,8 +28,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($curl, CURLOPT_MAXREDIRS, 20);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($curl, CURLOPT_USERAGENT,
-    "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
+  curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
   curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
   curl_setopt($curl, CURLOPT_REFERER, "http://site6.way2sms.com/");
   $text = curl_exec($curl);
@@ -50,8 +49,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   $text = curl_exec($curl);
 
 
-  preg_match_all('/<input[\s]*type="hidden"[\s]*name="Action"[\s]*id="Action"[\s]*value="?([^>]*)?"/si',
-    $text, $match);
+  preg_match_all('/<input[\s]*type="hidden"[\s]*name="Action"[\s]*id="Action"[\s]*value="?([^>]*)?"/si', $text, $match);
   $action = $match[1][0]; // get custid from the form fro the Action field in the post form
 
 
@@ -76,13 +74,14 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
 
   }
   //echo $text;
+  
   // Logout :P
   curl_setopt($curl, CURLOPT_URL, "http://site6.way2sms.com/LogOut");
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
-  $text = curl_exec($curl);
+  curl_exec($curl);
 
   curl_close($curl);
-  // echo $text;
+  
 
   //preg_match_all('/<span class="style1">?([^>]*)?<\/span>/si', $contents, $match);
   //$out=str_replace("&nbsp;","",$match[1][0]);
