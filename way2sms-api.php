@@ -43,7 +43,7 @@ function sendSMSToMany($uid, $pwd, $phone, $msg)
   if (trim($msg) == "" || strlen($msg) == 0)
     return "invalid message";
   $msg = urlencode(substr($msg,0,160));
-  $pharr = explode(";", $phone);
+  $pharr = explode(",", $phone);
   $refurl = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
   curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/jsp/InstantSMS.jsp");
