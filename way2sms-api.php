@@ -1,18 +1,18 @@
 <?php 
 
 /**
- * sendSMStoMany
- * Function to send to sms to multiple people via way2sms
+ * sendWay2SMS
+ * Function to send to sms to single/multiple people via way2sms
  * @author Kingster
  * @category SMS
- * @example sendsmsToMany ( '9000012345' , 'password' , '987654321,9876501234' , 'Hello World')
+ * @example sendWay2SMS ( '9000012345' , 'password' , '987654321,9876501234' , 'Hello World')
  * @url https://github.com/kingster/Way2SMS-API/
  * @return String/Array
  * Please use this code on your own risk. The author is no way responsible for the outcome arising out of this
  * Good Luck!
  **/
 
-function sendSMSToMany($uid, $pwd, $phone, $msg)
+function sendWay2SMS($uid, $pwd, $phone, $msg)
 {
   $curl = curl_init();
   $timeout = 30;
