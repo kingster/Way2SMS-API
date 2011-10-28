@@ -16,7 +16,7 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
 {
   $curl = curl_init();
   $timeout = 30;
-  $ret = "";
+  $result = array();
 
   $uid = urlencode($uid);
   $pwd = urlencode($pwd);
@@ -58,7 +58,6 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
   preg_match_all('/<input[\s]*type="hidden"[\s]*name="Action"[\s]*id="Action"[\s]*value="?([^>]*)?"/si', $text, $match);
   $action = $match[1][0]; // get custid from the form fro the Action field in the post form
 
-  $result = array();
   foreach ($pharr as $p)
   {
     if (strlen($p) != 10 || !is_numeric($p) || strpos($p, ".") != false)
@@ -66,7 +65,6 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
       $result[] = array('phone' => $p, 'msg' => urldecode($msg), 'result' => "invalid number");
       continue;
     }
-
     $p = urlencode($p);
 
     // Send SMS
@@ -79,6 +77,9 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
     $contents = curl_exec($curl);
 
     //Check Message Status
+    
+    //preg_match_all('/<span class="style1">?([^>]*)?<\/span>/si', $contents, $match);
+    //$out=str_replace("&nbsp;","",$match[1][0]);
     $pos = strpos($contents, 'Message has been submitted successfully');
     $res = ($pos !== false) ? true : false;
     $result[] = array('phone' => $p, 'msg' => urldecode($msg), 'result' => $res);
@@ -86,15 +87,12 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
   }
   //echo $text;
 
-  // Logout :P
+  // Logout
   curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/LogOut");
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
   $text = curl_exec($curl);
 
   curl_close($curl);
-
-  //preg_match_all('/<span class="style1">?([^>]*)?<\/span>/si', $contents, $match);
-  //$out=str_replace("&nbsp;","",$match[1][0]);
   return $result;
 
 }
