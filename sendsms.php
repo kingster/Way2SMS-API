@@ -24,7 +24,8 @@ if (!function_exists('stripos'))
 if (isset($_GET['uid']) && isset($_GET['pwd']) && isset($_GET['phone']) && isset($_GET['msg']))
 {
   $res =   sendWay2SMS($_GET['uid'], $_GET['pwd'], $_GET['phone'], $_GET['msg']);
-  echo $res[0]['result'];
+  if(is_array($res)) echo $res[0]['result'] ? 'true' : 'false';
+  else echo $res
   exit;
 }
 else
@@ -32,7 +33,8 @@ else
   {
     $smsg = stripslashes($_POST['msg']);
     $res =  sendWay2SMS($_POST['uid'], $_POST['pwd'], $_POST['phone'], $smsg);
-    echo $res[0]['result'];
+    if(is_array($res)) echo $res[0]['result'] ? 'true' : 'false';
+    else echo $res
     exit;
   }
 
