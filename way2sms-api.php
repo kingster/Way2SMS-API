@@ -59,7 +59,7 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
   {
     if (strlen($p) != 10 || !is_numeric($p) || strpos($p, ".") != false)
     {
-      $result[] = array ( 'phone' => $p , 'msg' => $msg , 'result' => "invalid number" );
+      $result[] = array ( 'phone' => $p , 'msg' => urldecode($msg) , 'result' => "invalid number" );
       continue;
     }
 
@@ -77,7 +77,7 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
     //Check Message Status  
     $pos = strpos($contents, 'Message has been submitted successfully');
     $res = ( $pos !== false) ? true : false;
-    $result[] = array ( 'phone' => $p , 'msg' => $msg , 'result' => $res );
+    $result[] = array ( 'phone' => $p , 'msg' => urldecode($msg) , 'result' => $res );
      
   }
   //echo $text;
