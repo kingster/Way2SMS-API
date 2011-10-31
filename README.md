@@ -17,6 +17,24 @@ How to
 ```
 
 
+GET/POST API
+------------
+
+Send SMS just making GET or POST Requests.
+
+Incase u want to use the service from your application then the parameters for ur application would be
+
+```
+http://www.yourdomain.com/sendsms.php?uid=LOGIN_ID&pwd=PASSWORD&phone=XXXXXXXXX,YYYYYYYYY&msg=Hello+World
+
+Parameters
+uid = LOGIN_ID ( Your Login ID [either nickname or 10 Digit mobile no] )
+pwd = PASSWORD ( Your Login Password )
+phone = 10 Digit Mobile number. Incase of multiple numbers then numbers separated by comma (,)
+msg = Your Message.
+```
+
+
 Note
 -------
 Please use this code on your own risk. The author is no way responsible for the outcome arising out of this.
