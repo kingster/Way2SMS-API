@@ -13,14 +13,6 @@
 
 include ('way2sms-api.php');
 
-if (!function_exists('stripos'))
-{
-  function stripos($haystack, $needle, $offset = 0)
-  {
-    return strpos(strtolower($haystack), strtolower($needle), $offset);
-  }
-}
-
 if (isset($_GET['uid']) && isset($_GET['pwd']) && isset($_GET['phone']) && isset($_GET['msg']))
 {
   $res =   sendWay2SMS($_GET['uid'], $_GET['pwd'], $_GET['phone'], $_GET['msg']);
