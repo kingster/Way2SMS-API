@@ -4,9 +4,9 @@
  * sendWay2SMS
  * Function to send to sms to single/multiple people via way2sms
  * @author Kingster
+ * @author SuyashBansal
  * @category SMS
  * @example sendWay2SMS ( '9000012345' , 'password' , '987654321,9876501234' , 'Hello World')
- * @url https://github.com/kingster/Way2SMS-API/
  * @return String/Array
  * Please use this code on your own risk. The author is no way responsible for the outcome arising out of this
  * Good Luck!
@@ -21,12 +21,13 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
   $uid = urlencode($uid);
   $pwd = urlencode($pwd);
 
-  $autobalancer = rand(1, 8);
+  //$autobalancer = rand(1, 8);
+  $autobalancer = 23;
 
+  // Setup for login
   curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/Login1.action");
   curl_setopt($curl, CURLOPT_POST, 1);
   curl_setopt($curl, CURLOPT_POSTFIELDS, "username=".$uid."&password=".$pwd."&button=Login");
-  //curl_setopt($curl , CURLOPT_PROXY , '144.16.192.218:8080' );
   curl_setopt($curl, CURLOPT_COOKIESESSION, 1);
   curl_setopt($curl, CURLOPT_COOKIEFILE, "cookie_way2sms");
   curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -42,24 +43,33 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
     return "access error : ". curl_error($curl);
 
   // Check for proper login
-  $pos = stripos(curl_getinfo($curl, CURLINFO_EFFECTIVE_URL), "Main.action");
+  $pos = stripos(curl_getinfo($curl, CURLINFO_EFFECTIVE_URL), "ebrdg.action");
   if ($pos === "FALSE" || $pos == 0 || $pos == "")
     return "invalid login";
 
+  // Check the message
   if (trim($msg) == "" || strlen($msg) == 0)
     return "invalid message";
-  $msg = urlencode(substr($msg, 0, 160));
+
+  // Take only the first 140 characters of the message
+  $msg = urlencode(substr($msg, 0, 140));
+  // Store the numbers from the string to an array
   $pharr = explode(",", $phone);
+
+  // Set the home page from where we can send message
   $refurl = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
-  curl_setopt($curl, CURLOPT_REFERER, $refurl);
-  curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/jsp/InstantSMS.jsp");
+  $newurl = str_replace("ebrdg.action?id=", "main.action?section=s&Token=", $refurl);
+  curl_setopt($curl, CURLOPT_URL, $newurl);
+
+  // Extract the token from the URL
+  $jstoken = substr($newurl, 50, -41);
+  //Go to the homepage
   $text = curl_exec($curl);
 
-  preg_match_all('/<input[\s]*type="hidden"[\s]*name="Action"[\s]*id="Action"[\s]*value="?([^>]*)?"/si', $text, $match);
-  $action = $match[1][0]; // get custid from the form fro the Action field in the post form
-
+  // Send SMS to each number
   foreach ($pharr as $p)
   {
+    // Check the mobile number
     if (strlen($p) != 10 || !is_numeric($p) || strpos($p, ".") != false)
     {
       $result[] = array('phone' => $p, 'msg' => urldecode($msg), 'result' => "invalid number");
@@ -67,25 +77,18 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
     }
     $p = urlencode($p);
 
-    // Send SMS
-    curl_setopt($curl, CURLOPT_URL, 'http://site'.$autobalancer.'.way2sms.com/quicksms.action');
+    // Setup to send SMS
+    curl_setopt($curl, CURLOPT_URL, 'http://site'.$autobalancer.'.way2sms.com/smstoss.action');
     curl_setopt($curl, CURLOPT_REFERER, curl_getinfo($curl, CURLINFO_EFFECTIVE_URL));
     curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS,
-      "HiddenAction=instantsms&bulidgpwd=*******&bulidguid=username&catnamedis=Birthday&chkall=on&gpwd1=*******&guid1=username&ypwd1=*******&yuid1=username&Action=".
-      $action."&MobNo=".$p."&textArea=".$msg);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, "ssaction=ss&Token=".$jstoken."&mobile=".$p."&message=".$msg."&button=Login");
     $contents = curl_exec($curl);
 
     //Check Message Status
-    
-    //preg_match_all('/<span class="style1">?([^>]*)?<\/span>/si', $contents, $match);
-    //$out=str_replace("&nbsp;","",$match[1][0]);
     $pos = strpos($contents, 'Message has been submitted successfully');
     $res = ($pos !== false) ? true : false;
     $result[] = array('phone' => $p, 'msg' => urldecode($msg), 'result' => $res);
-
   }
-  //echo $text;
 
   // Logout
   curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/LogOut");
@@ -94,7 +97,6 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
 
   curl_close($curl);
   return $result;
-
 }
 
 ?>
