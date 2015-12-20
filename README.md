@@ -3,10 +3,9 @@ Way2SMS PHP API
 
 Send SMS Via Way2SMS from PHP.  
 
-<del>Tested Working with Way2SMS UI Version 4. Supports upto 140 Characters</del>
-UPDATE: Way2SMS has added a Captcha Verification. Will update when I can find a workaround.
-
-
+<del>Tested Working with Way2SMS UI Version 4. Supports upto 140 Characters</del><br />
+<del>Way2SMS has added a Captcha Verification. Will update when I can find a workaround</del><br />
+UPDATE: Again Fully functional after some modifications!!
 
 
 
