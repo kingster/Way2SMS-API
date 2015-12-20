@@ -21,11 +21,17 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
   $uid = urlencode($uid);
   $pwd = urlencode($pwd);
 
-  //$autobalancer = rand(1, 8);
-  $autobalancer = 23;
+  // Go where the server takes you :P
+  curl_setopt($curl, CURLOPT_URL, "http://way2sms.com");
+  curl_setopt($curl, CURLOPT_HEADER, true);
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+  $a = curl_exec($curl);
+  if(preg_match('#Location: (.*)#', $a, $r))
+    $way2sms = trim($r[1]);
 
   // Setup for login
-  curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/Login1.action");
+  curl_setopt($curl, CURLOPT_URL, $way2sms."Login1.action");
   curl_setopt($curl, CURLOPT_POST, 1);
   curl_setopt($curl, CURLOPT_POSTFIELDS, "username=".$uid."&password=".$pwd."&button=Login");
   curl_setopt($curl, CURLOPT_COOKIESESSION, 1);
@@ -35,7 +41,7 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
   curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
-  curl_setopt($curl, CURLOPT_REFERER, "http://site".$autobalancer.".way2sms.com/");
+  curl_setopt($curl, CURLOPT_REFERER, $way2sms);
   $text = curl_exec($curl);
 
   // Check if any error occured
@@ -78,7 +84,7 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
     $p = urlencode($p);
 
     // Setup to send SMS
-    curl_setopt($curl, CURLOPT_URL, 'http://site'.$autobalancer.'.way2sms.com/smstoss.action');
+    curl_setopt($curl, CURLOPT_URL, $way2sms.'smstoss.action');
     curl_setopt($curl, CURLOPT_REFERER, curl_getinfo($curl, CURLINFO_EFFECTIVE_URL));
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, "ssaction=ss&Token=".$jstoken."&mobile=".$p."&message=".$msg."&button=Login");
@@ -91,7 +97,7 @@ function sendWay2SMS($uid, $pwd, $phone, $msg)
   }
 
   // Logout
-  curl_setopt($curl, CURLOPT_URL, "http://site".$autobalancer.".way2sms.com/LogOut");
+  curl_setopt($curl, CURLOPT_URL, $way2sms."LogOut");
   curl_setopt($curl, CURLOPT_REFERER, $refurl);
   $text = curl_exec($curl);
 
