@@ -132,7 +132,7 @@ class WAY2SMSClient
 
 /**
  * Helper Function to send to sms to single/multiple people via way2sms
- * @example sendWay2SMS ('987654321,9876501234' , 'Hello World')
+ * @example sendWay2SMS ( '9000012345' , 'password' , '987654321,9876501234' , 'Hello World')
  */
 
 function sendWay2SMS($uid, $pwd, $phone, $msg)
