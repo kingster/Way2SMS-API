@@ -5,12 +5,15 @@ Send SMS Via Way2SMS from PHP.
 
 <del>Tested Working with Way2SMS UI Version 4. Supports upto 140 Characters</del><br />
 <del>Way2SMS has added a Captcha Verification. Will update when I can find a workaround</del><br />
-UPDATE: Again Fully functional after some modifications!!
+UPDATE: Fully functional again :)  
 
 
 
-How to
+How to Use
 -------
+
+##### Simple Usage
+
 ```php
 <?php
     include('way2sms-api.php');
@@ -19,8 +22,26 @@ How to
 ?>
 ```
 
+##### Multiple Messages with different content
+```php
+<?php 
+    include('way2sms-api.php');
+    $client = new WAY2SMSClient();
+    $client->login('username', 'password');
+    $client->send('987654321', 'msg1');
+    //Add sleep between requests to make this requests more human like! 
+    //A blast of request's may mark the ip as spammer and blocking further requests.
+    sleep(1);
+    $client->send('987654321,9876501234', 'msg2');
+    sleep(1);
+    $client->logout();
+?>
+```
 
-GET/POST API
+
+
+
+HTTP API
 ------------
 
 Send SMS just making GET or POST Requests.
