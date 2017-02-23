@@ -13,7 +13,7 @@ class WAY2SMSClient
 
     var $curl;
     var $timeout = 30;
-    var $jsToken;
+    var $jstoken;
     var $way2smsHost;
     var $refurl;
 
