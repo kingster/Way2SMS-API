@@ -46,7 +46,7 @@ class WAY2SMSClient
         curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($this->curl, CURLOPT_MAXREDIRS, 20);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($this->curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
+        curl_setopt($this->curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
         curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, $this->timeout);
         curl_setopt($this->curl, CURLOPT_REFERER, $this->way2smsHost);
         $text = curl_exec($this->curl);
@@ -56,19 +56,20 @@ class WAY2SMSClient
             return "access error : " . curl_error($this->curl);
 
         // Check for proper login
-        $pos = stripos(curl_getinfo($this->curl, CURLINFO_EFFECTIVE_URL), "ebrdg.action");
+        $pos = stripos(curl_getinfo($this->curl, CURLINFO_EFFECTIVE_URL), "main.action");
         if ($pos === "FALSE" || $pos == 0 || $pos == "")
             return "invalid login";
 
         // Set the home page from where we can send message
         $this->refurl = curl_getinfo($this->curl, CURLINFO_EFFECTIVE_URL);
-        $newurl = str_replace("ebrdg.action?id=", "main.action?section=s&Token=", $this->refurl);
-        curl_setopt($this->curl, CURLOPT_URL, $newurl);
+        /*$newurl = str_replace("ebrdg.action?id=", "main.action?section=s&Token=", $this->refurl);
+        curl_setopt($this->curl, CURLOPT_URL, $newurl);*/
 
         // Extract the token from the URL
-        $this->jstoken = substr($newurl, 50, -41);
+        $tokenLocation = strpos($this->refurl, "Token");
+        $this->jstoken = substr($this->refurl, $tokenLocation + 6, 37);
         //Go to the homepage
-        $text = curl_exec($this->curl);
+        //$text = curl_exec($this->curl);
 
         return true;
     }
